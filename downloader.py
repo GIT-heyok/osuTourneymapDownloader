@@ -4,6 +4,7 @@ import re
 import sys
 import time
 from math import ceil
+import getpass
 
 import requests
 from loguru import logger
@@ -41,15 +42,13 @@ logger.configure(**LOGGER_CONFIG)
 OSU_URL = "https://osu.ppy.sh/home"
 OSU_SESSION_URL = "https://osu.ppy.sh/session"
 OSU_SEARCH_URL = "https://osu.ppy.sh/beatmapsets/search"
-
-
 class CredentialHelper:
     def __init__(self):
         self.credentials = {}
 
     def ask_credentials(self):
-        self.credentials["username"] = input('uid: ')
-        self.credentials["password"] = input('pw: ')
+        self.credentials["username"] = input('Please enter your osu! username: ')
+        self.credentials["password"] = input('Please enter your osu! password: ')
         if input("Do you want to save the osu! credentials at " + CREDS_FILEPATH + "? (y/n): ").lower() == "y":
             self.save_credentials()
 
@@ -67,6 +66,14 @@ class CredentialHelper:
                 json.dump(self.credentials, cred_file, indent=2)
         except IOError:
             logger.error(f"Error writing {CREDS_FILEPATH}")
+
+    def delete_credentials(self):
+        try:
+            if os.path.isfile(CREDS_FILEPATH):
+                os.remove(CREDS_FILEPATH)
+                logger.success(f"Successfully deleted {CREDS_FILEPATH}")
+        except IOError:
+            logger.error(f"Error deleting {CREDS_FILEPATH}")
 
 
 class BeatmapSet:
@@ -111,6 +118,8 @@ class Downloader:
         res = self.session.post(OSU_SESSION_URL, data=data, headers=headers)
         if res.status_code != requests.codes.ok:
             logger.error("Login failed")
+            if input("Do you want to delete the osu! credentials at " + CREDS_FILEPATH + "? (y/n): ").lower() == "y":
+                self.cred_helper.delete_credentials()
             sys.exit(1)
         logger.success("Login successful")
 
