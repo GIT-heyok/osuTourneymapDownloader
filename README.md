@@ -1,4 +1,4 @@
-# osuTourneymapDownloader
+# [osuTourneymapDownloader](https://github.com/GIT-heyok/osuTourneymapDownloader/releases)
   this project uses the basic skeleton of [vincentmathis](https://github.com/vincentmathis/osu-beatmap-downloader)'s osu beatmap downloader code
 
 # How to use it
