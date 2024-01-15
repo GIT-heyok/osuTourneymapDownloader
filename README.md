@@ -6,3 +6,5 @@
   2. Scrape the map id's from the tournament sheet and paste it
   3. if finished, type in -1 to start downloading maps
   4. maps will be downloaded in the background and could be found at /Downloads folder
+
+This program only supports the maps from official osu! website
